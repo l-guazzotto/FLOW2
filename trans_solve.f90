@@ -1420,6 +1420,7 @@ subroutine bc_psi_rho7(psi,rho,nx,nz)
 	psi_val = 0.d0
 
 	! For this case there should not be any need to interpolate
+	! Commented out if below (NEW)
 !	if(nx<bc_switch) then
 	! no interpolation
 
@@ -8083,7 +8084,7 @@ subroutine two_fluid_initial(psi,rho, n_den, psi_diff, big_Psi,nx,nz)
 	do j = 1, nz
 		do i = 1, nx
 
-			! Modified by Ian
+			! Added bc_type exclusion (NEW)
 			if(sort_grid(i,j)<0.and.bc_type/=7) then
 				cycle
 			endif
@@ -16865,7 +16866,7 @@ end subroutine ngs_solve_wrapper
 			if ( ((tri_type==13).and.(sort_grid(i,j)==2)).or.  &
 				((tri_type/=13).and.(bc_type/=7).and.(bc_type/=8).and.(sort_grid(i,j)==1)) ) then
 					psi123(1,i,j) = dabs(psi123(1,i,j))	!	segno
-			! Modified by Ian to conform with FLOW code
+			! Removed elseif to conform with FLOW code (NEW)
 			!elseif((bc_type==7).and.((i>nx/3).and.(i<2*nx/3).and.(j>nz/3).and.(j<2*nz/3))) then
 			!	psi123(1,i,j) = dabs(psi123(1,i,j))	!	segno
 			endif
@@ -16898,7 +16899,7 @@ end subroutine ngs_solve_wrapper
 
 				else
 
-					!(NEW)
+					! Added bc_type exclusion (NEW)
 					if(sort_grid(i,j)<=0.and.bc_type/=7) then
 					   cycle
 					end if
@@ -17063,6 +17064,7 @@ end subroutine ngs_solve_wrapper
 				! March 12 2021: we don't need to distinguish the two zones this way for bc_type==7 anymore.
 				! We are using the zone label "i_zone" instead.
 				! January 21 2022: Adapted to the same option for tri_type==13
+				! Added bc_type exclusion and modified if statment (NEW)
 				if( ((tri_type/=13).and.(bc_type/=7).AND.((psi0/psic)<fraction))  &
 								.OR.  &
 								! ((bc_type==7).AND.(sqrt((x_coord(i)-rmajor)**2+z_coord(j)**2)>0.4d0*z_size))  &
@@ -17229,6 +17231,7 @@ end subroutine ngs_solve_wrapper
 
 !   	   call bc_psi_rho0(psi123(1,:,:),rho,nx,nz)
 
+	    ! Commented out to fix free-boundary bug (NEW)
 		!do j=1,nz
 		!do i=1,nx
 
@@ -17297,7 +17300,7 @@ end subroutine ngs_solve_wrapper
 
  			call step_output(nx,psi123(1,:,:),rho,residual)
 			if ((k>25).and.(tri_type==13)) call update_interface(psi123(1,:,:),nx,inorm)
-			! Modified by Ian to conform with FLOW code (line below added)
+			! if statement below added to conform with FLOW code (NEW)
 			if(bc_type==7) call update_sort_grid(psi123(1,:,:),nx,nz,inorm)
 			continue
       end if
@@ -18618,7 +18621,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 
 !	if((initialize_zones).and.(bc_type==7)) then
 	if(bc_type==7) then
-
+		! Added inorm to update_sort_grid calls (NEW)
 		if(LCFS==-1) then
 			call update_sort_grid(psi(:,:),nx,nz,inorm)
 		elseif(LCFS==1) then
@@ -18659,7 +18662,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 	mx = 0.0d0
 	anorm = 0.0d0
 	anorm_2 = 0.0d0
-	res = 0.0d0
+	res = 0.0d0 ! Added this line? (NEW)
 	
 
 	do j=2,nz-1
@@ -18677,7 +18680,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 		! "Update psi(",i,",",j,")"
 		! Only solve the inner region problem
 
-			! Modified by Ian
+			! Added bc_type exclusion (NEW)
 			if(sort_grid(i,j)<=0.and.bc_type/=7) cycle
 
 			! set up local psi values
@@ -18875,7 +18878,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
           do j=2, nz-1
           do i=isw+1, nx-1, 2
 
-				! Modified by Ian
+				! Added bc_type exclusion (NEW)
 				if(sort_grid(i,j)<=0.and.bc_type/=7) cycle
 
 				! for now we want the index to be 0 for the plasma region and -1 for the vacuum region
@@ -19022,7 +19025,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
           do j=2, nz-1
           do i=isw+1, nx-1, 2
 
-				! Modified by Ian
+				! Added bc_type exclusion (NEW)
 				if(sort_grid(i,j)<=0.and.bc_type/=7) cycle
 
 
@@ -19171,7 +19174,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 	do j = 1, nz
 	do i = 1, nx
 
-			! Modified by Ian
+			! Added bc_type exclusion (NEW)
 			if(sort_grid(i,j)<=0.and.bc_type/=7) cycle
 
 			big_Psi(i,j) = psi(i,j) + psi_diff(i,j)
@@ -19265,6 +19268,8 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 		call step_output_TF(nx, psi, n_den, residual, big_Psi, psi_diff, diff_error)
 		! Comment by Ian: first 2 layers of if statements here are reasonable, 
 		! but the other conditions seem overly restrictive or just plain weird
+
+		! Added inorm to update_sort_grid call (NEW)
 		if(bc_type==7) then
 			if(LCFS==-1) then
 				if((tri_type==-1).or.(tri_type==-4)) then
@@ -26756,7 +26761,7 @@ subroutine psi_interp_setup(psi,n)
 end subroutine psi_interp_setup
 
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-subroutine update_sort_grid(psi,nx,nz,inorm)
+subroutine update_sort_grid(psi,nx,nz,inorm) ! Added inorm argument (NEW)
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ! The code will get here to update which points are in the main plasma and which ones are in the open field line region.
 ! For now, only the bc_type==7 option is considered ( March 12 2021).
@@ -27540,7 +27545,7 @@ end subroutine update_sort_grid_old
 
 	end subroutine radius_prim_theta
 
-! Added back in by Ian (NEW)
+! Added entire subroutine back in (NEW)
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	subroutine radius_both(x,z,ex,ez,r_in,r_out)
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

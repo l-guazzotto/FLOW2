@@ -91,6 +91,7 @@ subroutine readinput(m)
 
 		endif
 
+		! Commented this out (NEW)
 		!! Superceded by code below
 		!!if((bc_type==7).or.(bc_type==17)) then
 		!!	LCFS = 1 ! big_Psi
@@ -132,6 +133,7 @@ subroutine readinput(m)
 			psic_13 = psic - psi_e
 		endif
 
+		! Added tri_type==-3 to if statement (NEW)
 		if( ((bc_type==17).or.(bc_type==7)).and.((tri_type==13).or.(tri_type==-1)  &
 			.or.(tri_type==-2).or.(tri_type==-3).or.(tri_type==-4))) then	! WARNING!!!!!
 			continue

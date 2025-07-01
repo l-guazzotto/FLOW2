@@ -491,6 +491,7 @@ end subroutine plasma_shape_conversion
 
 	theta_points = theta_points_max
 
+	! Added if statement (NEW)
 	if((tri_type==-2).or.(tri_type==-3).or.(tri_type==-5))  then
 		allocate(r_data(theta_points+r_ord,6))
 		allocate(r_cscoef(2,theta_points))
@@ -532,10 +533,12 @@ end subroutine plasma_shape_conversion
 		 r_data(:,3),  &
 		 r_cscoef(1,1:theta_points))
 
+	! Added if statement (NEW)
 	if(tri_type==18) then
 		tri_type = 8
 	endif
 
+	! Added everything in if statement below (NEW)
 	if ((tri_type==-2).or.(tri_type==-3).or.(tri_type==-5))  then
 
 		! We need to save the file r2.dat and repeat the previous interpolation.
