@@ -132,7 +132,7 @@ module triangularity
 
 		call init_r0_standard
 
-	! Added by Ian (NEW)
+	! Added by Ian (NEW May 2025)
 	elseif ((tri_type==-2).or.(tri_type==-3).or.(tri_type==-5)) then
 
 		! First initialize the inner radius from standard shape (this may be edited later),
@@ -422,7 +422,7 @@ end subroutine plasma_shape_conversion
 
 	theta_points=max(theta_points1,theta_points2)
 
-	!(NEW)
+	!(NEW May 2025)
 	if((tri_type==-2).or.(tri_type==-3).or.(tri_type==-5))  then
 		if(allocated(r_data)) deallocate(r_data)
 		if(allocated(r_cscoef)) deallocate(r_cscoef)
@@ -491,7 +491,7 @@ end subroutine plasma_shape_conversion
 
 	theta_points = theta_points_max
 
-	! Added if statement (NEW)
+	! Added if statement (NEW May 2025)
 	if((tri_type==-2).or.(tri_type==-3).or.(tri_type==-5))  then
 		allocate(r_data(theta_points+r_ord,6))
 		allocate(r_cscoef(2,theta_points))
@@ -533,12 +533,12 @@ end subroutine plasma_shape_conversion
 		 r_data(:,3),  &
 		 r_cscoef(1,1:theta_points))
 
-	! Added if statement (NEW)
+	! Added if statement (NEW May 2025)
 	if(tri_type==18) then
 		tri_type = 8
 	endif
 
-	! Added everything in if statement below (NEW)
+	! Added everything in if statement below (NEW May 2025)
 	if ((tri_type==-2).or.(tri_type==-3).or.(tri_type==-5))  then
 
 		! We need to save the file r2.dat and repeat the previous interpolation.

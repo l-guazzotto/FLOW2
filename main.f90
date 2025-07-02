@@ -101,7 +101,7 @@ program FLOW2
 				rcos_u,rcos_d,rsin_u,rsin_d,  &
 				bigR_cos,bigR_sin,Z_cos,Z_sin,'R_Z.dat'  )
 
-	! Modified by Ian to exclude tri_type 3 as well (NEW)			
+	! Modified by Ian to exclude tri_type 3 as well (NEW May 2025)			
 	if((write_all).and.(tri_type/=-4).and.(tri_type/=-3).and.(tri_type/=-1).and.(tri_type/=0)  &
 			.and.(tri_type/=9).and.(tri_type/=11)) call get_minor_radius
 
