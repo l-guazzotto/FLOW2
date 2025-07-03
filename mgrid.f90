@@ -181,6 +181,7 @@ subroutine mgrid(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi,  &
   real (kind=dkind), dimension(:,:), allocatable :: ebig_Psi,obig_Psi
   integer :: alloc_stat
   integer :: acc_switch = 65
+  real(kind=dkind) :: inorm ! Unutilized here, but important for convergence in ngs_solve
 
 	if(grid_type<=-10) call pack_grid
 
@@ -455,6 +456,16 @@ subroutine mgrid(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi,  &
         if(err > 0) return
 		call interp_nonuni(obig_Psi,nc,ebig_Psi,nn,err)
         if(err > 0) return
+
+		! For free-boundary calculations, fix sort_grid as it was overwritten by set_grid
+		if(bc_type==17) then
+			if(LCFS==-1) then
+				call update_sort_grid(epsi,nn,nn,inorm)
+			elseif(LCFS==1) then
+				call update_sort_grid(ebig_Psi,nn,nn,inorm)
+			endif
+		endif
+
         ! Free up the previous grid
         deallocate(opsi)
         deallocate(orho)
@@ -531,6 +542,15 @@ subroutine mgrid(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi,  &
         if(err > 0) return
 		call interp_nonuni(ebig_Psi,nc,obig_Psi,nn,err)
         if(err > 0) return
+
+		! For free-boundary calculations, fix sort_grid as it was overwritten by set_grid
+		if(bc_type==17) then
+			if(LCFS==-1) then
+				call update_sort_grid(opsi,nn,nn,inorm)
+			elseif(LCFS==1) then
+				call update_sort_grid(obig_Psi,nn,nn,inorm)
+			endif
+		endif
 
         ! Free up the previous grid
         deallocate(epsi)
@@ -634,6 +654,15 @@ subroutine mgrid(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi,  &
     deallocate(epsi_diff)
 
  end if
+
+ ! For free-boundary calculations, fix sort_grid as it was overwritten by set_grid
+ if(bc_type==17) then
+	if(LCFS==-1) then
+		call update_sort_grid(psi,n,n,inorm)
+	elseif(LCFS==1) then
+		call update_sort_grid(big_Psi,n,n,inorm)
+	endif
+ endif
 
  ! initialize boundary conditions
  call initialize_bc(n)

@@ -18596,7 +18596,6 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 			call update_sort_grid(big_Psi(:,:),nx,nz,inorm)
 		endif
 !		initialize_zones = .false.
-
 	endif
 
 	diff_error = 0.d0
