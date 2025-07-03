@@ -7578,39 +7578,7 @@ end subroutine get_H_diff
 
 end function Fstarofpsi
 
-!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-!  function dhdpsi(psi) result(answer)
-!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-!
-!    real (kind=dkind), intent (in) :: psi
-!    real (kind=dkind) :: d,p,mt,mp
-!	real (kind=dkind) :: cs,dcs
-!    real (kind=dkind) :: answer
-!
-!	if(psi==psi_flag_ham) then
-!		answer = hp_loc
-!		return
-!	endif
-!
-!    d = dofpsi(psi)
-!    p = pofpsi(psi)
-!    mt = mach_theta(psi)
-!    mp = mach_phi(psi)
-!
-!
-!    if(d>0.0d0) then
-!
-!	   answer = (1.0d0/(gamma-1.0d0) + mt*mp - 0.5d0*mp**2)* &
-!            gamma*(dpdpsi(psi) - dddpsi(psi)*p/d)/d + &
-!            ((mt-mp)*dmach_phidpsi(psi) + mp*dmach_thetadpsi(psi))* &
-!            gamma*p/d
-!
-!	else
-!       answer = 0.0d0
-!    end if
-!
-!    return
-!  end function dhdpsi
+
 
   ! ------------------------------------------------------------------
   !					end of two-fluids free functions
