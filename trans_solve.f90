@@ -27321,7 +27321,7 @@ end subroutine update_sort_grid_old
 					theta_points, r_cscoef(1,1:theta_points) )
 
 
-		elseif(tri_type==13) then
+		elseif((tri_type==13).or.(tri_type==-3)) then
 
 			! plasma - vacuum case
 
