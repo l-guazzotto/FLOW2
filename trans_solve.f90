@@ -27136,7 +27136,18 @@ end subroutine update_sort_grid_old
 		bigR = 0.d0
 		Z = 0.d0
 
-		if(tri_type==0) then
+		if(tri_type==-3) then
+
+			! plasma - vacuum case
+
+			if(angle<0.d0) angle = angle+2.d0*pi
+
+			r_in = dbsval(angle, r_ord, r_data(1:theta_points2+r_ord,6),  &
+				theta_points2, r_cscoef(2,1:theta_points2) )
+			
+			r = r_in
+
+		elseif(tri_type==0) then
 
 !			ex = ((i-1.0d0)/(nx - 1.0d0) - 0.5d0)*x_size/a_elps
 !			ez = ((j-1.0d0)/(nz - 1.0d0) - 0.5d0)*z_size/b_elps
