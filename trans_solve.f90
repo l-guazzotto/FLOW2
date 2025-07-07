@@ -217,7 +217,15 @@ subroutine initialize_bc_equations(n)
 
 	endif
 
+	! For now, explicitly shorting free-boundary as that's what worked in FLOW. 
+	! But also letting the bc_type==17 condition do stuff above as a test
+	! TODO: check whether this works, and if so remove all other bc_type==7 checks below as redundant
+	if(bc_type==7) then 
+		return
+	endif
 
+	! Note: this is coded opposite to FLOW; instead of shorting the function for some conditions,
+	! we only allow specific conditions through to the rest of the function.
 	if((bc_type==3).or.(bc_type==23).or.(((bc_type==4).or.(bc_type==5).or.(bc_type==7).or.  &
 		(bc_type==8).or.(bc_type==14).or.(bc_type==24).or.(bc_type==34).or.(bc_type==44).or.  &
 		(bc_type==54).or.(bc_type==64))  &
