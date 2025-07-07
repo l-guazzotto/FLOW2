@@ -7950,7 +7950,9 @@ subroutine guess_soln(u,nx,nz)
               u(i,j) = 0.0d0
           else
 
-		  if(tri_type==13) then
+		  ! radius_1_3 isn't the best starting guess for free-boundary cases,
+		  ! but it shouldn't matter after just a few iterations
+		  if((tri_type==13).or.(bc_type==7).or.(bc_type==8)) then
 
 			call radius_1_3(x_coord(i),z_coord(j),ex,ez,th,rminor,  &
 								dummy_int,dummy(1),dummy(2),dummy(3))
