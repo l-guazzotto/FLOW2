@@ -1427,7 +1427,9 @@ subroutine bc_psi_rho7(psi,rho,nx,nz)
     den = dofpsi(0.0d0)
 	psi_val = 0.d0
 
-	! For this case there should not be any need to interpolate
+	! This isn't super computationally efficient since we should already know the boundary,
+	! but this only gets called rarely, and it works just fine
+	
 	! Commented out if statement below (NEW May 2025)
 !	if(nx<bc_switch) then
 	! no interpolation
@@ -1455,7 +1457,7 @@ subroutine bc_psi_rho7(psi,rho,nx,nz)
 		continue
 		return
 
-	! Don't remember why, but commented out by Ian (NEW May 2025)
+	! Shouldn't need any of the below code, so commented out by Ian (NEW May 2025)
 	!	endif
 
 	
@@ -2243,23 +2245,26 @@ subroutine bc_TF_7(psi,big_Psi,psi_diff,n_den,nx,nz,i_opt)
 			if((i_opt==0).or.(i_opt==3)) then
 			! update n_den
 
-				if(i==1) then
+				n_den(i,j) = den
 
-					n_den(i,j) = n_den(i+1,j)
+				! Don't know what was going on below, but commenting out for now
+				! if(i==1) then
 
-				elseif(i==nx) then
+				! 	n_den(i,j) = n_den(i+1,j)
 
-					n_den(i,j) = n_den(i-1,j)
+				! elseif(i==nx) then
 
-				elseif(j==1) then
+				! 	n_den(i,j) = n_den(i-1,j)
 
-					n_den(i,j) = n_den(i,j+1)
+				! elseif(j==1) then
 
-				elseif(j==nz) then
+				! 	n_den(i,j) = n_den(i,j+1)
 
-					n_den(i,j) = n_den(i,j-1)
+				! elseif(j==nz) then
 
-				endif
+				! 	n_den(i,j) = n_den(i,j-1)
+
+				! endif
 
 			endif
 
