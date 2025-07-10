@@ -18817,7 +18817,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 			if((bc_type/=7).or.((bc_type==7).and.(sort_grid(i,j)==2))) then
 				if(dabs(psi(i,j))>mx) then
 					mx = dabs(psi(i,j))
-					! Comment by Ian: not sure why this next if statement exists, let alone is so restrictive
+					! Comment by Ian: this next if is just for tri_type==-4, which is deprecated for now
 					if((tri_type==-4).and.(LCFS==-1)) then
 						ipsic = i
 						jpsic = j
@@ -18859,6 +18859,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
           do i=isw+1, nx-1, 2
 
 				! Added bc_type exclusion (NEW May 2025)
+				! TODO: This means that below if never triggers, so if this works this line should be removed entirely
 				if(sort_grid(i,j)<=0.and.bc_type/=7) cycle
 
 				! for now we want the index to be 0 for the plasma region and -1 for the vacuum region
@@ -18944,7 +18945,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 					n_denlz = n_den(i,j) - 0.5d0*dz*drho_ds
 					phinlz = mass * philz/n_denlz
 
-					term0_5 = phi_TF_ofpsi(big_Psi0) * (  &
+					term0_5 = phi_TF_ofpsi(big_Psi0,i_zone) * (  &
 								( phinrx*(big_Psir-big_Psi0)/(x + 0.5d0*dx) &
 								+ phinlx*(big_Psil-big_Psi0)/(x - 0.5d0*dx) )  &
 								/(x*dx2) &
@@ -18965,7 +18966,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 				endif
 
 				call get_H_diff(psi(i,j),big_Psi(i,j),H_diff_loc,i_zone) ! dbsval, or integrate hofpsi(psi(i,j))
-				H_loc = h_e_ofpsi_partial(psi(i,j)) + h_i_ofpsi_partial(big_Psi(i,j),i_zone) + eV*H_diff_loc	! the R^2 Omega^2 term is hidden in H (i.e., H_diff)
+				H_loc = h_e_ofpsi_partial(psi(i,j),i_zone) + h_i_ofpsi_partial(big_Psi(i,j),i_zone) + eV*H_diff_loc	! the R^2 Omega^2 term is hidden in H (i.e., H_diff)
 
 				if(H_loc<=0.d0) then
 					print*, 'problem in psi_diff max'
@@ -19094,7 +19095,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 					n_denlz = n_den(i,j) - 0.5d0*dz*drho_ds
 					phinlz = mass * philz/n_denlz
 
-					term0_5 = phi_TF_ofpsi(big_Psi0) * (  &
+					term0_5 = phi_TF_ofpsi(big_Psi0,i_zone) * (  &
 								( phinrx*(big_Psir-big_Psi0)/(x + 0.5d0*dx) &
 								+ phinlx*(big_Psil-big_Psi0)/(x - 0.5d0*dx) )  &
 								/(x*dx2) &
@@ -19115,7 +19116,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 				endif
 
 				call get_H_diff(psi(i,j),big_Psi(i,j),H_diff_loc,i_zone) ! dbsval, or integrate hofpsi(psi(i,j))
-				H_loc = h_e_ofpsi_partial(psi(i,j)) + h_i_ofpsi_partial(big_Psi(i,j),i_zone) + eV*H_diff_loc	! the R^2 Omega^2 term is hidden in H (i.e., H_diff)
+				H_loc = h_e_ofpsi_partial(psi(i,j),i_zone) + h_i_ofpsi_partial(big_Psi(i,j),i_zone) + eV*H_diff_loc	! the R^2 Omega^2 term is hidden in H (i.e., H_diff)
 
 				if(H_loc<=0.d0) then
 					print*, 'problem in psi_diff max'
