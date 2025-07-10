@@ -17159,7 +17159,7 @@ end subroutine ngs_solve_wrapper
 					! Find the max absolute value of psi in the plasma
 					if((tri_type==13).and.(sort_grid(i,j)==2)) then
 						mx = dmax1(dabs(psi123(h,i,j)),mx)
-					elseif((bc_type==7).and.((i>nx/3).and.(i<2*nx/3).and.(j>nz/3).and.(j<2*nz/3))) then
+					elseif((bc_type==7).and.(sort_grid(i,j)==2)) then
 						mx = dmax1(dabs(psi123(h,i,j)),mx)
 					elseif((tri_type/=13).and.(bc_type/=7)) then
 						mx = dmax1(dabs(psi123(h,i,j)),mx)
@@ -17290,8 +17290,6 @@ end subroutine ngs_solve_wrapper
 
 		write(111,*) k,anorm
 
-		last_anorm = anorm
-		reduce = .false.
 
 !		call cpu_time(toc)
 !
