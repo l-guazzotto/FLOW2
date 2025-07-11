@@ -26524,18 +26524,6 @@ subroutine update_interface(psi,n,inorm)
 
 	! first update fraction
 
-	! Comment by Ian: not sure if this statement is necessary for tri_types that will be called
-	if (n<=inter_switch) then
-
-		fnew = psi_e/psic
-		fraction = r_orp*fnew + (1.d0-r_orp)*fraction
-
-	else
-
-		fnew = fraction * psic
-		psi_e = r_orp*fnew + (1.d0-r_orp)*psi_e
-
-	endif
 
 	if (n<inter_switch) return
 
@@ -26582,28 +26570,32 @@ subroutine update_interface(psi,n,inorm)
 
 		r_data_psi(i,1) = theta_temp
 
-69		call secroot(psi_sol,rg1,rg2,r_data_psi(i,2),  &
-					100,1.d-9,1.d-9, error)
+		look_for_r = .true.
 
-		if(error==1) then
+		do while(look_for_r)
+			
+			call secroot(psi_sol,rg1,rg2,r_data_psi(i,2),  &
+					100,1.d-9,1.d-9, error)
+			
+			if(error==0) then
+
+				look_for_r = .false.
+
+			elseif(error==1) then
 		! secroot failed because the root was not bracketed, try again
 !!$			rg2 = smallr2 * 0.99**k
 !!$			k = k+1
 			rg2 = rg2 * 1.01d0
 
-			if((rg2<0.5d0*smallr1).or.(rg2>0.995d0*smallr2)) then
-				r_data_psi(i,2) = smallr1
+			!if((rg2<0.5d0*smallr1).or.(rg2>0.995d0*smallr2)) then
+			if(rg2>0.995d0*smallr2) then
+				r_data_psi(i,2) = smallr2
 				print*, 'problem in update_interface, theta = ', theta_temp
 				! no need to say this should NOT happen
-				goto 71
-				! Comment by Ian: very janky pseudo-do loop with GOTOs here, should come back and fix with exit statements later
+				look_for_r = .false.
 			endif
 
-			goto 69
-
 		endif
-
-71		continue
 
 
 	enddo
@@ -26657,9 +26649,6 @@ subroutine update_interface(psi,n,inorm)
 	print*, 'interface error:', inorm
 	print*,'      '
 
-	! update the grid
-	! Comment by Ian: again, not sure if this is necessary for tri_types that will be called
-	call set_sort_grid(n,n)
 
 	continue
 
