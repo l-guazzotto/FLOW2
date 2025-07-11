@@ -9498,6 +9498,8 @@ subroutine update_rho_TF(psi,big_Psi,psi_diff,n_den,nx,nz,seek_mtm,mtm_acc,min_d
 		mach_theta_max = mach_theta_max + (mach_theta_max_initial-mach_theta_max)*2.5d-2
 	endif
 
+! Ian comment: double check that commented out code below isn't necessary,
+! and that this operation gets performed BEFORE update_rho_TF gets called
 !!$	do j=1,nz
 !!$		do i=1,nx
 !!$				if((bc_type/=7).and.(bc_type/=8)) then
