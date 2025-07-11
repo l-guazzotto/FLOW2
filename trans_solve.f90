@@ -8312,9 +8312,11 @@ subroutine update_rho(psi_in,rho,b_phi,nx,nz,seek_mtm,mtm_acc,min_drho,  &
 !		  rho(i,j) = dofpsi(psi(i,j))
 !		  cycle
 
-		  if( ( (tri_type==13).and.(sort_grid(i,j)==1) )  &
-				.or. (((bc_type==7).or.(bc_type==8)).and.(psi(i,j)<0.d0))  &
-				.or. ((bc_type==7).and.(sqrt((x_coord(i)-rmajor)**2+z_coord(j)**2)>0.4d0*z_size))) then
+		!  if( ( (tri_type==13).and.(sort_grid(i,j)==1) )  &
+		!		.or. (((bc_type==7).or.(bc_type==8)).and.(psi(i,j)<0.d0))  &
+		!		.or. ((bc_type==7).and.(sqrt((x_coord(i)-rmajor)**2+z_coord(j)**2)>0.4d0*z_size))) then
+		!  Ian comment: don't remember why, but commented out above if's and replaced with below
+		  if ( (tri_type==13).and.(sort_grid(i,j,0)<1) )  then
 				if(gravity_type==0) then
 					rho(i,j) = dofpsi(0.d0)
 				else
@@ -8345,8 +8347,6 @@ subroutine update_rho(psi_in,rho,b_phi,nx,nz,seek_mtm,mtm_acc,min_drho,  &
 
 			g_Lambda = grav_potential(x_coord(i),z_coord(j))
 
-			g_mtheta=mach_theta(psi(i,j))
-			g_D = dofpsi(psi(i,j))
 
 
 		  g_dx=dx_a(i)
@@ -8536,6 +8536,7 @@ subroutine update_rho(psi_in,rho,b_phi,nx,nz,seek_mtm,mtm_acc,min_drho,  &
                 do
                    ! Reduce Mach Theta Max
                    mach_theta_max = mtm_soln - dmtm
+				   ! Ian comment: if statement below is new; not sure if necessary or correct 
 				   if (mach_theta_max<5.d-2*mach_theta_max_initial) then
 						! just patch the point and hope for the best
 !						patch_value(i,j) = .true.
@@ -18644,7 +18645,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 	anorm_2 = 0.0d0
 	res = 0.0d0 ! Added this line? (NEW May 2025)
 	
-
+	! Ian comment: not sure this is necessary here; double check? 
 	do j=2,nz-1
 	do i=2,nx-1
 		if((bc_type/=7).and.(sort_grid(i,j)>0)) psi(i,j) = dabs(psi(i,j))	!	segno
