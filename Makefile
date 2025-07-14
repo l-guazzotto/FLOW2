@@ -3,7 +3,7 @@ F95 = gfortran
 
 #FFLAGS =  -O3
 FFLAGS =  -Og -g -fPIC -ffree-line-length-0
-FFLAGS2 =   -O3 -ffree-line-length-0
+#FFLAGS2 =   -O3 -ffree-line-length-0
 # For debug only: compile w/ more verbose options and backtrace
 #FFLAGS = -Og -g -fPIC -ffree-line-length-0 -fcheck=all -Wall -Wextra -fbacktrace
 #FFLAGS = -O3 -fPIC -ffree-line-length-0 -fcheck=all -Wall -Wextra -fbacktrace

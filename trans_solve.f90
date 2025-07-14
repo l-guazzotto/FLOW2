@@ -8316,7 +8316,7 @@ subroutine update_rho(psi_in,rho,b_phi,nx,nz,seek_mtm,mtm_acc,min_drho,  &
 		!		.or. (((bc_type==7).or.(bc_type==8)).and.(psi(i,j)<0.d0))  &
 		!		.or. ((bc_type==7).and.(sqrt((x_coord(i)-rmajor)**2+z_coord(j)**2)>0.4d0*z_size))) then
 		!  Ian comment: don't remember why, but commented out above if's and replaced with below
-		  if ( (tri_type==13).and.(sort_grid(i,j,0)<1) )  then
+		  if ( (tri_type==13).and.(sort_grid(i,j)<1) )  then
 				if(gravity_type==0) then
 					rho(i,j) = dofpsi(0.d0)
 				else
@@ -26522,7 +26522,7 @@ subroutine update_interface(psi,n,inorm)
 	real(kind=dkind), dimension(1:n,1:n) :: psi
 	real(kind=dkind) :: inorm
 	real(kind=dkind) :: fnew
-
+	logical :: look_for_r
 !	external psi_sol
 
 	! first update fraction
@@ -26588,18 +26588,19 @@ subroutine update_interface(psi,n,inorm)
 		! secroot failed because the root was not bracketed, try again
 !!$			rg2 = smallr2 * 0.99**k
 !!$			k = k+1
-			rg2 = rg2 * 1.01d0
+				rg2 = rg2 * 1.01d0
 
-			!if((rg2<0.5d0*smallr1).or.(rg2>0.995d0*smallr2)) then
-			if(rg2>0.995d0*smallr2) then
-				r_data_psi(i,2) = smallr2
-				print*, 'problem in update_interface, theta = ', theta_temp
-				! no need to say this should NOT happen
-				look_for_r = .false.
+				!if((rg2<0.5d0*smallr1).or.(rg2>0.995d0*smallr2)) then
+				if(rg2>0.995d0*smallr2) then
+					r_data_psi(i,2) = smallr2
+					print*, 'problem in update_interface, theta = ', theta_temp
+					! no need to say this should NOT happen
+					look_for_r = .false.
+				endif
+
 			endif
 
-		endif
-
+		enddo
 
 	enddo
 
@@ -27782,7 +27783,7 @@ subroutine secroot(fx,x1,x2,x,itemax,xtoll,ftoll,error)
 	real(kind=dkind) :: m, x3, f3
 	integer :: error
 
-	external fx
+!	external fx
 
 	error = 0
 
