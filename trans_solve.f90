@@ -19256,13 +19256,13 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 		! Added inorm to update_sort_grid call (NEW May 2025)
 		if(bc_type==7) then
 			if(LCFS==-1) then
-				if((tri_type==-1).or.(tri_type==-4)) then
+				if((tri_type==-3)) then
 					call update_sort_grid(psi(:,:),nx,nz,inorm)
 				elseif((k>25).and.(tri_type==-2)) then
 					call update_interface(psi(:,:),n,inorm)
 				endif			
 			elseif(LCFS==1) then
-				if((tri_type==-1).or.(tri_type==-4)) then
+				if((tri_type==-3)) then
 					call update_sort_grid(big_Psi(:,:),nx,nz,inorm)
 				elseif((k>25).and.(tri_type==-2)) then
 					call update_interface(big_Psi(:,:),nx,inorm)
