@@ -8017,12 +8017,14 @@ subroutine guess_soln_TF(psi,big_Psi,psi_diff,n_den,nx,nz)
     integer, intent(in) :: nx,nz
     real (kind=dkind), dimension(1:nx,1:nz), intent(out) :: psi,big_Psi,psi_diff,n_den
     integer :: i,j,k
-    real (kind=dkind) :: ex,ez
+    real (kind=dkind) :: ex,ez,th,r_i,r_o,psie
+	integer :: dummy_int
+	real(kind=dkind), dimension(1:3) :: dummy
 
 	! Put some peaked initial distribution in the center
 	do i=1, nx
 		do j=1, nz
-		! Only solve the inner region problem
+			! Only solve the inner region problem
 
 			if(sort_grid(i,j)<=0) then
 
@@ -8030,13 +8032,42 @@ subroutine guess_soln_TF(psi,big_Psi,psi_diff,n_den,nx,nz)
 
 			else
 
-				call radius(i,j,nx,nz,ex,ez,rminor,dx,dz)
-				!this is required to get rminor
+				! radius_1_3 isn't the best starting guess for free-boundary cases,
+		  		! but it shouldn't matter after just a few iterations
+		  		if((tri_type==13).or.(bc_type==7).or.(bc_type==8)) then
 
-				psi(i,j) = psic *(rminor**2 - ex*ex - ez*ez)/rminor**2
+					call radius_1_3(x_coord(i),z_coord(j),ex,ez,th,rminor,  &
+									dummy_int,dummy(1),dummy(2),dummy(3))
+					!this is required to get rminor
+
+					r_o = dbsval(th, r_ord, r_data(1:theta_points1+r_ord,3),  &
+						theta_points1, r_cscoef(1,1:theta_points1) )
+
+					r_i = dbsval(th, r_ord, r_data(1:theta_points2+r_ord,6),  &
+						theta_points2, r_cscoef(2,1:theta_points2) )
+				
+				else
+
+					call radius(i,j,nx,nz,ex,ez,rminor,dx,dz)
+					!this is required to get rminor
+				
+				endif
+
+				if((bc_type==7).or.(bc_type==8)) then
+
+					psie = dbsval(th, psib_ord, psib_data(1:ibreak_pb,3),  &
+							ibreak_pb-psib_ord, psib_cscoef(1:ibreak_pb-psib_ord) )
+
+					psi(i,j) = psic + (psie-psic)*(ex**2+ez**2)/rminor**2
+
+				else
+
+					psi(i,j) = psic *(rminor**2 - ex*ex - ez*ez)/rminor**2
+				
+				endif
 
 				big_Psi(i,j) = psi(i,j)
-
+				! No izone call for density since we should be in the inner region anyway
 				n_den(i,j) = D_TF_ofpsi(psi(i,j))
 
 			end if
@@ -8044,6 +8075,7 @@ subroutine guess_soln_TF(psi,big_Psi,psi_diff,n_den,nx,nz)
 		end do
 	end do
 
+	! Big psi is initialized to be same as psi, so psi_diff is just zero everywhere (for now)
 	psi_diff = 0.d0
 
 	psic = maxval(psi)
