@@ -26833,7 +26833,7 @@ subroutine update_sort_grid(psi,nx,nz,inorm) ! Added inorm argument (NEW May 202
 			elseif(tri_type==-3) then
 
 				 if((((bc_type==7).or.(bc_type==8)).and.(psi(i,j)<0.d0))  &
-						.or. ((bc_type==7).and.(psi(i,j)>0.d0).and.((ex*ex + ez*ez) > r_in**2))) then
+						.or. ((bc_type==7).and.(psi(i,j)>0.d0).and.((ex*ex + ez*ez) > rminor**2))) then
 
 					sort_grid(i,j) = 1 ! External zone
 
