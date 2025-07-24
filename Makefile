@@ -2,12 +2,20 @@ F95 = gfortran
 #F95 = pgfortran
 
 #FFLAGS =  -O3
+# -fPIC is mostly necessary for any future use with Python, but may help with debugging too
 FFLAGS =  -Og -g -fPIC -ffree-line-length-0
+# Commenting out FFLAGS2 for now since it only applies the flags to the executable and not each individual object
 #FFLAGS2 =   -O3 -ffree-line-length-0
-# For debug only: compile w/ more verbose options and backtrace
+
+# For debug only: compile with more verbose options and backtrace
 #FFLAGS = -Og -g -fPIC -ffree-line-length-0 -fcheck=all -Wall -Wextra -fbacktrace
 #FFLAGS = -O3 -fPIC -ffree-line-length-0 -fcheck=all -Wall -Wextra -fbacktrace
-#FFLAGS = -O3 -fPIC -ffree-line-length-0 -Wall -Wline-truncation -Wcharacter-truncation -Wsurprising -Waliasing -Wimplicit-interface -Wunused-parameter -fwhole-file -fcheck=all -pedantic -fbacktrace
+# Trying to check for uninitialized variables only since those are quite nefarious
+#FFLAGS = -Og -g -fPIC -ffree-line-length-0 -Wmaybe-uninitialized -Wuninitialized -Wno-tabs
+# "Everything but the kitchen sink" compiler flags:
+#FFLAGS = -Og -g -fPIC -ffree-line-length-0 -Wall -Wline-truncation -Wcharacter-truncation -Wsurprising -Waliasing -Wimplicit-interface -Wunused-parameter -fwhole-file -fcheck=all -fbacktrace -Wuninitialized -Wno-tabs
+# Note: use -pedantic flag if you want to include the kitchen sink
+
 
 
 LINK	= $(F95) $(FFLAGS)
@@ -22,6 +30,7 @@ constant.o array_dimensions.o pseudo_IMSL.o  interpolating_functions.o \
 FLOW2:  $(OBJECTS) 
 	$(LINK) $(OBJECTS)  -o FLOW2_2022_exe_mac
 
+# debug not working quite right, use with caution
 debug:  $(OBJECTS) 
 	$(LINK2) $(OBJECTS)  -o FLOW2_2022_exe_mac
 

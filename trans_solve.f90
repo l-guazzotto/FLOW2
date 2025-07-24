@@ -8105,6 +8105,7 @@ subroutine two_fluid_initial(psi,rho, n_den, psi_diff, big_Psi,nx,nz)
 			endif
 
 			x = x_coord(i)
+			! Would need to add i_zone calls here if 1-fluid run is ever done with free-boundaries implemented
 			phic = phiofpsi(psi(i,j))
 			omegac = omegaofpsi(psi(i,j))
 

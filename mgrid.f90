@@ -95,14 +95,14 @@ subroutine mgrid_wrapper(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi)
 		endif
 
 !		call mgrid(psi_temp,rho_temp,residual_temp,b_phi_temp, n_den_temp, psi_diff_temp, big_Psi_temp)
-		call mgrid(psi=psi_temp,rho=rho_temp,residual=residual_temp,b_phi=b_phi_temp, n_den=n_den_temp,  &
-						psi_diff=psi_diff_temp, big_Psi=big_Psi_temp, nguess=1)
+		!call mgrid(psi=psi_temp,rho=rho_temp,residual=residual_temp,b_phi=b_phi_temp, n_den=n_den_temp,  &
+		!				psi_diff=psi_diff_temp, big_Psi=big_Psi_temp, nguess=1)
 
 !!$		if(Broot_zero) Broot = 0
 
-		call two_fluid_initial(psi_temp,rho_temp, n_den_temp, psi_diff_temp, big_Psi_temp, n, n)
+		!call two_fluid_initial(psi_temp,rho_temp, n_den_temp, psi_diff_temp, big_Psi_temp, n, n)
 
-		big_Psic = maxval(big_Psi_temp)
+		!big_Psic = maxval(big_Psi_temp)
 
 		eq_type = eq_type_temp
 		n = n_res
@@ -123,8 +123,10 @@ subroutine mgrid_wrapper(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi)
 		print*, '----------------------------------------'
 		print*, '   '
 
-		call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi,  &
-						psi_guess=psi_temp, n_den_guess=n_den_temp, psi_diff_guess=psi_diff_temp, big_Psi_guess=big_Psi_temp, nguess=n_min)
+		call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi, nguess=n_min)
+
+		!call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi,  &
+		!				psi_guess=psi_temp, n_den_guess=n_den_temp, psi_diff_guess=psi_diff_temp, big_Psi_guess=big_Psi_temp, nguess=n_min)
 
 	else
 
@@ -166,7 +168,7 @@ subroutine mgrid(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi,  &
   real (kind=dkind), dimension(1:n,1:n), intent(inout) :: psi,rho,residual,b_phi, n_den, psi_diff, big_Psi
   integer :: nguess
   real (kind=dkind), dimension(1:nguess,1:nguess), intent(in), optional :: psi_guess, n_den_guess, psi_diff_guess, big_Psi_guess
-  logical :: all_present
+  logical :: all_present = .false.
   real (kind=dkind) :: orp=-1.0d0
   integer :: err
   integer :: ng ! Total number of grid levels in the calculation
@@ -346,7 +348,7 @@ subroutine mgrid(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi,  &
 				enddo
 				enddo
 			else
-				call guess_soln_TF(opsi,obig_Psi,opsi_diff,n_den,nn,nn)
+				call guess_soln_TF(opsi,obig_Psi,opsi_diff,on_den,nn,nn)
 				do jj = 1,nn
 				do ii = 1,nn
 					if(present(psi_guess)) opsi(ii,jj) = psi_guess(ii,jj)
