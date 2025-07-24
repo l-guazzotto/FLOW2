@@ -21551,7 +21551,7 @@ end subroutine ngs_solve_TF_free_boundary
 
 			if(bc_type==7) then
 				! for now we want the index to be 0 for the plasma region and -1 for the vacuum region
-				i_zone = min(0,sort_grid(i,j)-2)
+				i_zone = min(0,sort_grid(j,k)-2)
 				i_zone = max(-1,i_zone)
 			endif
 
@@ -21749,7 +21749,7 @@ end subroutine ngs_solve_TF_free_boundary
 
 			if(bc_type==7) then
 				! for now we want the index to be 0 for the plasma region and -1 for the vacuum region
-				i_zone = min(0,sort_grid(i,j)-2)
+				i_zone = min(0,sort_grid(j,k)-2)
 				i_zone = max(-1,i_zone)
 			endif
 
