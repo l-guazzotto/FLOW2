@@ -95,6 +95,8 @@ subroutine mgrid_wrapper(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi)
 		endif
 
 !		call mgrid(psi_temp,rho_temp,residual_temp,b_phi_temp, n_den_temp, psi_diff_temp, big_Psi_temp)
+		! Changed by Ian: commenting out some calls for now to try and eliminate single-fluid pre-run
+		! (only for free-boundary runs since ngs_solve doesn't have i_zone calls implemented)
 		!call mgrid(psi=psi_temp,rho=rho_temp,residual=residual_temp,b_phi=b_phi_temp, n_den=n_den_temp,  &
 		!				psi_diff=psi_diff_temp, big_Psi=big_Psi_temp, nguess=1)
 
@@ -123,6 +125,7 @@ subroutine mgrid_wrapper(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi)
 		print*, '----------------------------------------'
 		print*, '   '
 
+		!Ian Change: trying out call to start 2-fluid run "from scratch"
 		call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi, nguess=n_min)
 
 		!call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi,  &

@@ -26563,7 +26563,7 @@ subroutine update_interface(psi,n,inorm)
 
 	if (n<inter_switch) return
 
-	r_orp = 0.05d0
+	r_orp = 0.25d0
 
 	inorm = 0.d0
 
