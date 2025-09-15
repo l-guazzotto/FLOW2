@@ -8008,6 +8008,7 @@ subroutine guess_soln(u,nx,nz)
 
   end subroutine guess_soln
 
+  ! Initialize psi, Psi, and density for cases where no single-fluid prerun was used
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 subroutine guess_soln_TF(psi,big_Psi,psi_diff,n_den,nx,nz)
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -8029,6 +8030,10 @@ subroutine guess_soln_TF(psi,big_Psi,psi_diff,n_den,nx,nz)
 			if(sort_grid(i,j)<=0) then
 
 				psi(i,j) = 0.0d0
+				big_Psi(i,j) = 0.0d0
+				! Know we're outside of the plasma right now, so calling w/ zone = -1
+				n_den(i,j) = D_TF_ofpsi(psi(i,j),-1)
+
 
 			else
 
@@ -8040,11 +8045,6 @@ subroutine guess_soln_TF(psi,big_Psi,psi_diff,n_den,nx,nz)
 									dummy_int,dummy(1),dummy(2),dummy(3))
 					!this is required to get rminor
 
-					r_o = dbsval(th, r_ord, r_data(1:theta_points1+r_ord,3),  &
-						theta_points1, r_cscoef(1,1:theta_points1) )
-
-					r_i = dbsval(th, r_ord, r_data(1:theta_points2+r_ord,6),  &
-						theta_points2, r_cscoef(2,1:theta_points2) )
 				
 				else
 
@@ -26866,7 +26866,7 @@ subroutine update_sort_grid(psi,nx,nz,inorm) ! Added inorm argument (NEW May 202
 			elseif(tri_type==-3) then
 
 				 if((((bc_type==7).or.(bc_type==8)).and.(psi(i,j)<0.d0))  &
-						.or. ((bc_type==7).and.(psi(i,j)>0.d0).and.((ex*ex + ez*ez) > rminor**2))) then
+						.or. ((bc_type==7).and.(psi(i,j)>=0.d0).and.((ex*ex + ez*ez) > r_in**2))) then
 
 					sort_grid(i,j) = 1 ! External zone
 

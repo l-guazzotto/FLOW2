@@ -1,7 +1,7 @@
 F95 = gfortran
 #F95 = pgfortran
 
-#FFLAGS =  -O3
+#FFLAGS =  -O3 -ffree-line-length-0
 # -fPIC is mostly necessary for any future use with Python, but may help with debugging too
 FFLAGS =  -Og -g -fPIC -ffree-line-length-0
 # Commenting out FFLAGS2 for now since it only applies the flags to the executable and not each individual object
