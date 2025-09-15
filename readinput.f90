@@ -100,9 +100,6 @@ subroutine readinput(m)
 		!!	bc_type = abs(bc_type)
 		!!endif
 
-!		if(((bc_type==7).or.(bc_type==8).or.(bc_type==17)).or.(((bc_type==21).or.  &
-		if(((modulo(abs(bc_type),10)==7).or.(bc_type==8)).or.(((bc_type==21).or.  &
-			(bc_type==23).or.(bc_type==24)).and.(numerical_psi_diff))) call read_numerical_bc
 
 		! This sets up which surface is used to define the boundary
 		if(modulo(abs(bc_type),10)==7) then
@@ -113,6 +110,10 @@ subroutine readinput(m)
 				bc_type = abs(bc_type)
 			endif
 		endif
+
+!		if(((bc_type==7).or.(bc_type==8).or.(bc_type==17)).or.(((bc_type==21).or.  &
+		if(((modulo(bc_type,10)==7).or.(bc_type==8)).or.(((bc_type==21).or.  &
+			(bc_type==23).or.(bc_type==24)).and.(numerical_psi_diff))) call read_numerical_bc
 
 		if((bc_type/=7).and.(bc_type/=8)) then ! need to check if (bc_type==8) still does anything
 			if(psi_diff_option>2) then

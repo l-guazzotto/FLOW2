@@ -19292,7 +19292,7 @@ subroutine ngs_solve_TF(psi,big_Psi,psi_diff,n_den,residual,nx,nz,min_it,max_it,
 				if((tri_type==-3)) then
 					call update_sort_grid(psi(:,:),nx,nz,inorm)
 				elseif((k>25).and.(tri_type==-2)) then
-					call update_interface(psi(:,:),n,inorm)
+					call update_interface(psi(:,:),nx,inorm)
 				endif			
 			elseif(LCFS==1) then
 				if((tri_type==-3)) then
