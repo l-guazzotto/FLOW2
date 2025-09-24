@@ -26644,7 +26644,7 @@ subroutine update_interface(psi,n,inorm)
 		smallr1 = dbsval(r_data_psi(i,1), r_ord, r_data(1:theta_points2+r_ord,6),  &
 			theta_points2, r_cscoef(2,1:theta_points2) )
 
-		inorm = max(inorm,dabs( (r_orp*r_data_psi(i,2) + (1.d0-r_orp)*smallr1)/smallr1 )-1.d0 )
+		inorm = max(inorm,dabs( ( (r_orp*r_data_psi(i,2) + (1.d0-r_orp)*smallr1)/smallr1 )-1.d0) )
 
 		r_data_psi(i,2) = r_orp*r_data_psi(i,2) + (1.d0-r_orp)*smallr1
 
