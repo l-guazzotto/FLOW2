@@ -97,14 +97,16 @@ subroutine mgrid_wrapper(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi)
 !		call mgrid(psi_temp,rho_temp,residual_temp,b_phi_temp, n_den_temp, psi_diff_temp, big_Psi_temp)
 		! Changed by Ian: commenting out some calls for now to try and eliminate single-fluid pre-run
 		! (only for free-boundary runs since ngs_solve doesn't have i_zone calls implemented)
-		!call mgrid(psi=psi_temp,rho=rho_temp,residual=residual_temp,b_phi=b_phi_temp, n_den=n_den_temp,  &
-		!				psi_diff=psi_diff_temp, big_Psi=big_Psi_temp, nguess=1)
+		if(bc_type/=7) then
+			call mgrid(psi=psi_temp,rho=rho_temp,residual=residual_temp,b_phi=b_phi_temp, n_den=n_den_temp,  &
+						psi_diff=psi_diff_temp, big_Psi=big_Psi_temp, nguess=1)
 
 !!$		if(Broot_zero) Broot = 0
 
-		!call two_fluid_initial(psi_temp,rho_temp, n_den_temp, psi_diff_temp, big_Psi_temp, n, n)
+			call two_fluid_initial(psi_temp,rho_temp, n_den_temp, psi_diff_temp, big_Psi_temp, n, n)
 
-		!big_Psic = maxval(big_Psi_temp)
+			big_Psic = maxval(big_Psi_temp)
+		endif
 
 		eq_type = eq_type_temp
 		n = n_res
@@ -126,12 +128,15 @@ subroutine mgrid_wrapper(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi)
 		print*, '   '
 
 		!Ian Change: trying out call to start 2-fluid run "from scratch"
-		call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi, nguess=n_min)
+		if(bc_type==7) then
+			call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, &
+						psi_diff=psi_diff, big_Psi=big_Psi, nguess=n_min)
+		else
+			call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi,  &
+						psi_guess=psi_temp, n_den_guess=n_den_temp, psi_diff_guess=psi_diff_temp, big_Psi_guess=big_Psi_temp, nguess=n_min)
+		endif
 
-		!call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi,  &
-		!				psi_guess=psi_temp, n_den_guess=n_den_temp, psi_diff_guess=psi_diff_temp, big_Psi_guess=big_Psi_temp, nguess=n_min)
-
-	else
+	else ! single-fluid run
 
 	!	call mgrid(psi,rho,residual,b_phi, n_den, psi_diff, big_Psi)
 		call mgrid(psi=psi,rho=rho,residual=residual,b_phi=b_phi, n_den=n_den, psi_diff=psi_diff, big_Psi=big_Psi, nguess=1)
