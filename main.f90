@@ -363,6 +363,7 @@ program FLOW2
 	call r_of_theta
 
 	call write_restart_data(psi,n,n,"psi")
+	call write_restart_data(big_Psi,n,n,"big_psi")
 	call write_restart_data(rho,n,n,"rho")
 
 	call psiout

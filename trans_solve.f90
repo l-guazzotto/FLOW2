@@ -26563,7 +26563,7 @@ subroutine update_interface(psi,n,inorm)
 
 	if (n<inter_switch) return
 
-	r_orp = 0.25d0
+	r_orp = 0.5d0
 
 	inorm = 0.d0
 
@@ -26742,8 +26742,8 @@ subroutine psi_interp_setup(psi,n)
 		 stop
 	endif
 
-	call DBSNAK(nx_FLOW,x_coord,s_ord,xknot_psi)
-	call DBSNAK(nz_FLOW,z_coord,s_ord,zknot_psi)
+	call DBSNAK(nx_FLOW,x_coord(1:nx_FLOW),s_ord,xknot_psi)
+	call DBSNAK(nz_FLOW,z_coord(1:nz_FLOW),s_ord,zknot_psi)
 
 	! (this 2 define the nodes)
 
@@ -26753,7 +26753,7 @@ subroutine psi_interp_setup(psi,n)
 ! set psi
 
 
-	call DBS2IN(nx_FLOW,x_coord,nz_FLOW,z_coord,psi,nx_FLOW,  &
+	call DBS2IN(nx_FLOW,x_coord(1:nx_FLOW),nz_FLOW,z_coord(1:nz_FLOW),psi,nx_FLOW,  &
 				s_ord,s_ord,xknot_psi,zknot_psi,psi_bscoef(:,:) )
 
 
@@ -26864,15 +26864,15 @@ subroutine update_sort_grid(psi,nx,nz,inorm) ! Added inorm argument (NEW May 202
 				endif
 
 			elseif(tri_type==-3) then
+				
+					if((((bc_type==7).or.(bc_type==8)).and.(psi(i,j)<0.d0))  &
+							.or. ((bc_type==7).and.(psi(i,j)>=0.d0).and.((ex*ex + ez*ez) > r_in**2))) then
 
-				 if((((bc_type==7).or.(bc_type==8)).and.(psi(i,j)<0.d0))  &
-						.or. ((bc_type==7).and.(psi(i,j)>=0.d0).and.((ex*ex + ez*ez) > r_in**2))) then
+						sort_grid(i,j) = 1 ! External zone
 
-					sort_grid(i,j) = 1 ! External zone
+					else
 
-				else
-
-					sort_grid(i,j) = 2 ! Internal zone
+						sort_grid(i,j) = 2 ! Internal zone
 
 				endif
 
